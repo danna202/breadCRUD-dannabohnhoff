@@ -9,7 +9,7 @@ router.get('/', (req, res) => {
    
  })
 
-// GET: get a bread by its index (query parameter)
+
 router.get('/new', (req,res) => {
         res.send('new')
 })
@@ -21,18 +21,18 @@ router.get('/:index', (req,res) => {
     })
 })
 
-router.post('/', (req,res) => {
-    const { hasGluten, image } = req.body
-    if(!image) req.body.image = 'https://suebeehomemaker.com/wp-content/uploads/2021/10/sliced-french-bread.jpg'
-    if (hasGluten === 'on'){
-        req.body.hasGluten = true
-    } else {
-        req.body.hasGluten = false
-    }
-    Bread.push(req.body)
-    res.redirect('/breads')
+// router.post('/', (req,res) => {
+//     const { hasGluten, image } = req.body
+//     if(!image) req.body.image = 'https://suebeehomemaker.com/wp-content/uploads/2021/10/sliced-french-bread.jpg'
+//     if (hasGluten === 'on'){
+//         req.body.hasGluten = true
+//     } else {
+//         req.body.hasGluten = false
+//     }
+//     Bread.push(req.body)
+//     res.redirect('/breads')
 
-})
+// })
 
 
 module.exports = router
