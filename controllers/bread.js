@@ -1,16 +1,37 @@
 const router = require('express').Router()
 const Bread = require('../models/bread')
 
-// GET: all the bread
+
 router.get('/', (req, res) => {
-    // res.render('index')
-    res.send(Bread)
-    })
+    res.render('index', { 
+        breads: Bread
+    }) 
+   
+ })
 
 // GET: get a bread by its index (query parameter)
+router.get('/new', (req,res) => {
+        res.send('new')
+})
+
 router.get('/:index', (req,res) => {
-    const {index} = req.params
-    res.send(Bread[index])
+    const { index } = req.params
+    res.render('show', {
+        bread: Bread[index]
+    })
+})
+
+router.post('/', (req,res) => {
+    const { hasGluten, image } = req.body
+    if(!image) req.body.image = 'https://suebeehomemaker.com/wp-content/uploads/2021/10/sliced-french-bread.jpg'
+    if (hasGluten === 'on'){
+        req.body.hasGluten = true
+    } else {
+        req.body.hasGluten = false
+    }
+    Bread.push(req.body)
+    res.redirect('/breads')
+
 })
 
 
