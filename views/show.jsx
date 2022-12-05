@@ -7,7 +7,19 @@ function Show ({bread}) {
          <Default>
              <h2>Show Page</h2>
              <h3>{bread.name}</h3>
-             <img src={bread.image} alt={bread.image} />
+             <p>
+                and it
+              {
+                    bread.hasGluten 
+                    ? <span> does </span>
+                    : <span> does not </span>
+              }
+                have gluten
+             </p>
+              <img src={bread.image} alt={bread.image} />  
+              <li>
+                <a href='/breads'>Go Home</a> 
+              </li>
          </Default>
 
         )
