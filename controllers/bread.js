@@ -2,9 +2,10 @@ const router = require('express').Router()
 const Bread = require('../models/bread')
 
 
-router.get('/', (req, res) => {
-    res.render('index', { 
-        breads: Bread
+router.get('/', async (req, res) => {
+    const bread = await Bread.find()
+        res.render('index', { 
+        breads: bread
     }) 
  
  })
@@ -30,29 +31,31 @@ router.get('/:index', (req,res) => {
     })
 })
 
-router.post('/', (req,res) => {
+router.post('/', async(req,res) => {
     const { hasGluten, image } = req.body
-    if (!image) req.body.image ='https://suebeehomemaker.com/wp-content/uploads/2021/10/sliced-french-bread.jpg'
-    
+    // if (!image) req.body.image ='https://suebeehomemaker.com/wp-content/uploads/2021/10/sliced-french-bread.jpg'
     if (hasGluten === 'on') {
         req.body.hasGluten = 'true'
     } else {
         req.body.hasGluten = 'false'
     }
-
-    try {
-        new URL(image)
-     } catch (error) {
-        console.log('error saving image:', error)
-        res.render('new', {
-           error: 'not a valid image' 
-        })
-        return
-    }
-    Bread.push(req.body)
+        let mongoRes = await Bread.create(req.body)
+        console.log(mongoRes)
     res.redirect('/breads')
-})
 
+    // try {
+    //     new URL(image)
+    //  } catch (error) {
+    //     console.log('error saving image:', error)
+    //     res.render('new', {
+    //        error: 'not a valid image' 
+    //     })
+    //     return
+    //  }
+        
+    // res.redirect('/breads')
+})
+    
 router.put('/:index', (req, res) => {
     const { index, image, hasGluten } = req.params
     if (!image) req.body.image ='https://suebeehomemaker.com/wp-content/uploads/2021/10/sliced-french-bread.jpg'
@@ -63,6 +66,7 @@ router.put('/:index', (req, res) => {
     } 
 
     Bread[index] = req.body
+
     res.redirect(`/breads/${index}`)
 
 })

@@ -1,14 +1,17 @@
-const mogoose = require('mongoose')
+const mongoose = require('mongoose')
 
 const breadSchema = new mongoose.Schema({
   name: {
-    type: String
+    type: String,
+    required: true
   },
   hasGluten: {
-    type: Boolean
+    type: Boolean,
+    required: true
   },
   image: {
-    type: String
+    type: String,
+    default: 'https://suebeehomemaker.com/wp-content/uploads/2021/10/sliced-french-bread.jpg'
   }
 })
 
