@@ -16,10 +16,9 @@ router.get('/new', (req,res) => {
 
 router.get('/:id/edit', (req, res) => {
     const { id } = req.params
-    const bread = Bread.findById[index]
+    const bread = Bread[id]
     res.render('edit', {
         bread
-        
     })
 })
 
