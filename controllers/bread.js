@@ -14,12 +14,12 @@ router.get('/new', (req,res) => {
         res.render('new')
 })
 
-router.get('/:index/edit', (req, res) => {
-    const { index } = req.params
-    const bread = Bread[index]
+router.get('/:id/edit', (req, res) => {
+    const { id } = req.params
+    const bread = Bread.findById[index]
     res.render('edit', {
-        bread,
-        index
+        bread
+        
     })
 })
 
@@ -56,8 +56,8 @@ router.post('/', async(req,res) => {
     // res.redirect('/breads')
 })
     
-router.put('/:index', (req, res) => {
-    const { index, image, hasGluten } = req.params
+router.put('/:id', async (req, res) => {
+    const { id, image, hasGluten } = req.params
     if (!image) req.body.image ='https://suebeehomemaker.com/wp-content/uploads/2021/10/sliced-french-bread.jpg'
     if (hasGluten === 'on') {
         req.body.hasGluten = 'true'
@@ -65,18 +65,17 @@ router.put('/:index', (req, res) => {
         req.body.hasGluten = 'false'
     } 
 
-    Bread[index] = req.body
-
-    res.redirect(`/breads/${index}`)
+    // Bread[id] = req.body
+    await Bread.findByIdAndUpdate(id, req.body)
+    res.redirect(`/breads/${id}`)
 
 })
 
 //Delete a bread
 
-router.delete('/:index', (req, res) => {
-    const { index } = req.params
-    const numIndex = Number(index)
-    Bread.splice(numIndex, 1)
+router.delete('/:id', async (req, res) => {
+    const { id } = req.params
+    await Bread.findByIdAndDelete(id)
     res.status(303).redirect('/breads')
   })
 
