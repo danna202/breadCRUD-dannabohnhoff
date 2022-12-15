@@ -1,77 +1,83 @@
 const router = require('express').Router()
 const Bread = require('../models/bread')
+const Baker = require('../models/baker')
+const seedData = require('../models/seedData')
 
 
 router.get('/', async (req, res) => {
     const bread = await Bread.find()
+    const bakers = await Baker.find()
         res.render('index', { 
-        breads: bread
+        breads: bread,
+        bakers
+        
     }) 
  
  })
 
-router.get('/new', (req,res) => {
-        res.render('new')
+//  Get:create new bread page
+router.get('/new', async (req,res) => {
+      const bakers = await Baker.find()
+        res.render('new', {
+           bakers
+        })
 })
-
-router.get('/:id/edit', (req, res) => {
+// Get: edit bread page
+router.get('/:id/edit', async (req, res) => {
     const { id } = req.params
-    const bread = Bread[id]
-    res.render('edit', {
-        bread
+    const bread = await Bread.findById[id]
+    const bakers = await Baker.find()
+    res.render('edit',  {
+        bread, bakers
     })
-})
-
-router.get('/:index', (req,res) => {
-    const { index } = req.params
+} )
+// query parameter
+router.get('/:id', async (req, res) => {
+    const { id } = req.params;
+    const bread = await Bread.findById(id).populate('baker')
         res.render('show', {
-        bread: Bread[index],
-        index
+        bread       
     })
 })
 
-router.post('/', async(req,res) => {
-    const { hasGluten, image } = req.body
-    // if (!image) req.body.image ='https://suebeehomemaker.com/wp-content/uploads/2021/10/sliced-french-bread.jpg'
-    if (hasGluten === 'on') {
-        req.body.hasGluten = 'true'
-    } else {
-        req.body.hasGluten = 'false'
-    }
-        let mongoRes = await Bread.create(req.body)
-        console.log(mongoRes)
+router.get('/data.delete', async (req, res) =>{
+    await Bread.insertMany(seedData)
     res.redirect('/breads')
-
-    // try {
-    //     new URL(image)
-    //  } catch (error) {
-    //     console.log('error saving image:', error)
-    //     res.render('new', {
-    //        error: 'not a valid image' 
-    //     })
-    //     return
-    //  }
-        
-    // res.redirect('/breads')
 })
-    
+
+router.get('/data/delete', async (req,res) => {
+    await Bread.deleteMany()
+    res.redirect('/breads')
+})
+
+router.post('/', async (req,res) => {
+    const { hasGluten, image } = req.body
+        if(!image) req.body.image = undefined
+        if (hasGluten === 'on') {
+            req.body.hasGluten = true;
+        } else {
+            req.body.hasGluten = false;
+    }
+       
+    await Bread.create(req.body)
+    res.redirect('/breads')
+})
+
+
 router.put('/:id', async (req, res) => {
-    const { id, image, hasGluten } = req.params
+    const { id, } = req.params
+    const { image, hasGluten } = req.body
     if (!image) req.body.image ='https://suebeehomemaker.com/wp-content/uploads/2021/10/sliced-french-bread.jpg'
     if (hasGluten === 'on') {
         req.body.hasGluten = 'true'
     } else {
         req.body.hasGluten = 'false'
     } 
-
-    // Bread[id] = req.body
-    await Bread.findByIdAndUpdate(id, req.body)
+    awaitBread.findByIdAndUpdate(id, req.body)
     res.redirect(`/breads/${id}`)
-
 })
-
+   
 //Delete a bread
-
 router.delete('/:id', async (req, res) => {
     const { id } = req.params
     await Bread.findByIdAndDelete(id)

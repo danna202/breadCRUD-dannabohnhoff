@@ -4,6 +4,7 @@ const mongoose = require('mongoose')
 require('dotenv').config()
 
 const breadRoutes = require('./controllers/bread')
+const bakerRoutes = require('./controllers/baker')
 
 const app = express()
 
@@ -17,13 +18,15 @@ app.engine('jsx', require('express-react-views').createEngine())
 
 
 app.use('/breads', breadRoutes)
+app.use('/baker', bakerRoutes)
 
 app.get('/', (req, res) =>{
-    res.send('<h1>Hello</h1>')
+    res.send('<h1>Main Page</h1>')
  })
+
+  // db connection 
 mongoose.set('strictQuery', true);
- // db connection 
- mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true}) 
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true}) 
     .then(() => console.log('DB connected')) 
     .catch(err => console.error(err));
 
